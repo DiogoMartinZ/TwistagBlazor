@@ -1,0 +1,95 @@
+﻿@page "/"
+@using NetcodeHub.Packages.Components.Toast
+@using TwistagBlazor.Services;
+@using TwistagBlazor.Models;
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using static System.Net.WebRequestMethods
+@inject IHttpClientFactory ClientFactory
+@using System.Net.Http.Json
+@using System.Net.Http
+@inject HttpClient Http
+@inject IUserInfoService _userInfoService;
+@using System.ComponentModel.DataAnnotations;
+@inject ToastService toastService
+@rendermode InteractiveServer
+
+
+<style>
+    .w200{
+        max-width:200px;
+    }
+</style>
+
+<PageTitle>User Form</PageTitle>
+
+<h1>User Form</h1>
+
+<div class="row">
+    <span>
+        Please fill the form with the information.
+    </span>
+    <EditForm OnValidSubmit="Submit" Model="_userInfo" FormName="UserForm">
+       
+        <div class="row mt-2" style="display:grid;">
+            <span>Name</span>
+            <InputText class="w200" @bind-Value="_userInfo.Name"></InputText>
+            <div class="danger">
+                <ValidationMessage For="@(() => _userInfo.Name)" />
+            </div>
+        </div>
+
+        <div class="row mt-2" style="display:grid;">
+            <span>Email</span>
+            <InputText class="w200" @bind-Value="_userInfo.Email"></InputText>
+            <div class="danger">
+                <ValidationMessage For="@(() => _userInfo.Email)" />
+            </div>
+        </div>
+
+
+        <div class="row mt-2" style="display:grid;">
+            <span>Age</span>
+            <InputNumber class="w200" @bind-Value="_userInfo.Age"></InputNumber>
+            <div class="danger">
+                <ValidationMessage For="@(() => _userInfo.Age)" />
+            </div>
+        </div>
+
+        <div class="w20 mt-5" style="margin-left:5%">
+            <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+        
+    </EditForm>
+
+</div>
+
+<Toast @ref="toastService.ToastComponent"></Toast>
+
+
+@code
+{
+    [SupplyParameterFromForm]
+    public UserInformation? _userInfo { get; set; }
+
+    protected override void OnInitialized() => _userInfo ??= new();
+
+    private async void Submit()
+    {
+        var apiResponse = await _userInfoService.AddUserInfo(_userInfo);
+
+        if (apiResponse)
+        {
+            toastService.ShowSuccessToast("Success!", "User Added Successfully!");
+        }
+        else
+        {
+            toastService.ShowDangerToast("Error!", "Email already registed!");
+        }
+
+        
+
+    }
+
+
+}

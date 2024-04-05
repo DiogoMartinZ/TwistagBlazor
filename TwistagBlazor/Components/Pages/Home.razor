@@ -48,7 +48,6 @@
             </div>
         </div>
 
-
         <div class="row mt-2" style="display:grid;">
             <span>Age</span>
             <InputNumber class="w200" @bind-Value="_userInfo.Age"></InputNumber>
@@ -66,7 +65,6 @@
 </div>
 
 <Toast @ref="toastService.ToastComponent"></Toast>
-
 
 @code
 {
@@ -87,10 +85,5 @@
         {
             toastService.ShowDangerToast("Error!", "Email already registed!");
         }
-
-        
-
     }
-
-
 }

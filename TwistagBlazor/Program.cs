@@ -12,18 +12,7 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<ToastService>();
 
-//builder.Services.AddScoped(sp =>
-//    new HttpClient
-//    {
-//        BaseAddress = new Uri("https://localhost:7109/")
-//    });
-
-//builder.Services.AddScoped(sp =>
-//    new HttpClient
-//    {
-//        BaseAddress = new Uri(builder.Configuration["FrontendUrl"] ?? "https://localhost:7109")
-//    });
-
+//Api URL
 builder.Services.AddHttpClient<IUserInfoService,UserInfoService>
     (client =>
     {

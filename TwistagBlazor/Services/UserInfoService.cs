@@ -49,12 +49,10 @@ namespace TwistagBlazor.Services
 
         public async Task<bool> DeleteUser(int id)
         {
-
             var result = await httpClient.DeleteAsync($"api/UserInfoes/{id}");
 
             return result.IsSuccessStatusCode;
-           
-
+          
 
         }
 

@@ -10,6 +10,7 @@ namespace TwistagBlazor.Models
         public string? Name { get; set; }
 
         [Required(ErrorMessage = "Please write an Email.")]
+        [EmailAddress]
         public string? Email { get; set; }
 
         [Required(ErrorMessage = "Please write an age.")]

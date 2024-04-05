@@ -35,5 +35,28 @@ namespace TwistagBlazor.Services
 
       
         }
+
+        public async Task<List<UserInformation>> GetAllUserInfo()
+        {
+
+            var result = await httpClient.GetAsync("api/UserInfoes");
+            var response = await result.Content.ReadFromJsonAsync<List<UserInformation>>();         
+
+            return response;
+
+
+        }
+
+        public async Task<bool> DeleteUser(int id)
+        {
+
+            var result = await httpClient.DeleteAsync($"api/UserInfoes/{id}");
+
+            return result.IsSuccessStatusCode;
+           
+
+
+        }
+
     }
 }

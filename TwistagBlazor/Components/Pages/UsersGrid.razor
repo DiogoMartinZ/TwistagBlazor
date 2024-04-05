@@ -1,0 +1,90 @@
+﻿@page "/UsersGrid"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using NetcodeHub.Packages.Components.Toast
+@using TwistagBlazor.Services;
+@using TwistagBlazor.Models;
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using static System.Net.WebRequestMethods
+@inject IHttpClientFactory ClientFactory
+@using System.Net.Http.Json
+@using System.Net.Http
+@inject HttpClient Http
+@inject IUserInfoService _userInfoService;
+@using System.ComponentModel.DataAnnotations;
+@inject ToastService toastService
+@rendermode InteractiveServer
+
+
+
+<style>
+    .w200{
+        max-width:200px;
+    }
+</style>
+
+<PageTitle>Users Grid</PageTitle>
+
+<h1>Users Grid</h1>
+
+<QuickGrid Items="userInformations.AsQueryable()">
+    <PropertyColumn Property="x=>x.Name" Title="User Name" Sortable="true"></PropertyColumn>
+    <PropertyColumn Property="x=>x.Email" Title="Email" Sortable="true"></PropertyColumn>
+    <PropertyColumn Property="x=>x.Age" Title="Age" Sortable="true"></PropertyColumn>
+    <TemplateColumn Title="Action">
+        <button class="btn btn-danger" @onclick=@(()=>DeleteUser(context))>Delete</button>
+        
+    
+    </TemplateColumn>
+
+</QuickGrid>
+
+
+<Toast @ref="toastService.ToastComponent"></Toast>
+
+
+@code
+{
+    List<UserInformation> userInformations = new();
+
+    [SupplyParameterFromForm]
+    public UserInformation? _userInfo { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var apiResponse = await _userInfoService.GetAllUserInfo();
+
+        userInformations = apiResponse;
+
+    }
+
+    private async Task DeleteUser(UserInformation userInformation)
+    {
+
+        var apiResponse = await _userInfoService.DeleteUser(userInformation.Id);
+
+        if (apiResponse)
+        {
+            toastService.ShowSuccessToast("Success!", "User Deleted Successfully!");
+        }
+        else
+        {
+            toastService.ShowDangerToast("Error!", "Could not delete user");
+        }
+
+        await UpdateData();
+    }
+
+    protected async Task UpdateData()
+    {
+        var apiResponse = await _userInfoService.GetAllUserInfo();
+
+        userInformations = apiResponse;
+
+    }
+
+
+
+
+
+}
